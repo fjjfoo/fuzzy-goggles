@@ -3,6 +3,7 @@ export default {
   description: '记录技术成长与生活感悟，分享前端开发经验和生活思考',
   lang: 'zh-CN',
   lastUpdated: false,
+  base: '/fuzzy-goggles/',
   head: [
     ['meta', { name: 'keywords', content: '前端开发,Vue,TypeScript,技术博客,个人博客' }],
     ['meta', { name: 'author', content: 'feisun林' }],
