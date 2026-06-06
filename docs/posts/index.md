@@ -61,6 +61,13 @@ TypeScript 是 JavaScript 的超集，为 JavaScript 带来了类型系统。
 
 [阅读全文 →](/posts/css-grid)
 
+### Python 学习路线指南
+**发布时间**: 2024-03-15 | **标签**: Python, 后端
+
+从基础语法到主流框架（Flask、Django、FastAPI），为你梳理完整的 Python 学习路线。
+
+[阅读全文 →](/posts/python-learning-path)
+
 ---
 
 ## 生活感悟

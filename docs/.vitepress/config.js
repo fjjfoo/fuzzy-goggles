@@ -9,7 +9,12 @@ export default {
     ['meta', { name: 'author', content: 'feisun林' }],
     ['meta', { name: 'description', content: 'feisun林的个人博客，记录技术成长与生活感悟' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
-    ['link', { rel: 'alternate', type: 'application/rss+xml', title: 'RSS', href: '/rss.xml' }]
+    ['link', { rel: 'alternate', type: 'application/rss+xml', title: 'RSS', href: '/rss.xml' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }],
+    ['script', { src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js', async: true }],
+    ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=5.0' }]
   ],
   themeConfig: {
     search: {
@@ -20,7 +25,15 @@ export default {
       { text: '文章', link: '/posts/' },
       { text: '标签', link: '/tags/' },
       { text: '友链', link: '/friends' },
-      { text: '关于', link: '/about' }
+      { text: '关于', link: '/about' },
+      {
+        text: '主题',
+        items: [
+          { text: '亮色', link: '#', theme: 'light' },
+          { text: '暗色', link: '#', theme: 'dark' },
+          { text: '跟随系统', link: '#', theme: 'system' }
+        ]
+      }
     ],
     sidebar: {
       '/posts/': [
@@ -32,7 +45,9 @@ export default {
             { text: 'TypeScript 基础', link: '/posts/typescript-basics' },
             { text: 'JavaScript 异步编程', link: '/posts/js-async' },
             { text: 'CSS Grid 布局', link: '/posts/css-grid' },
-            { text: 'VitePress 搭建博客', link: '/posts/vitepress-blog' }
+            { text: 'VitePress 搭建博客', link: '/posts/vitepress-blog' },
+            { text: 'Coze 零基础学习路线', link: '/posts/coze-learning' },
+            { text: 'Python 学习路线指南', link: '/posts/python-learning-path' }
           ]
         },
         {
@@ -56,9 +71,14 @@ export default {
           text: '技术标签',
           items: [
             { text: 'Vue', link: '/tags/vue' },
+            { text: 'React', link: '/tags/react' },
             { text: 'TypeScript', link: '/tags/typescript' },
+            { text: 'JavaScript', link: '/tags/javascript' },
             { text: '前端', link: '/tags/frontend' },
-            { text: 'CSS', link: '/tags/css' }
+            { text: 'CSS', link: '/tags/css' },
+            { text: 'Python', link: '/tags/python' },
+            { text: '后端', link: '/tags/backend' },
+            { text: 'AI', link: '/tags/ai' }
           ]
         },
         {
@@ -72,9 +92,9 @@ export default {
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com' },
-      { icon: 'twitter', link: 'https://twitter.com' },
-      { icon: 'rss', link: '/rss.xml' }
+      { icon: 'github', link: 'https://github.com/fjjfoo', ariaLabel: 'GitHub' },
+      { icon: 'twitter', link: 'https://twitter.com', ariaLabel: 'Twitter' },
+      { icon: 'rss', link: '/rss.xml', ariaLabel: 'RSS' }
     ],
     footer: {
       message: '基于 VitePress 构建',

@@ -24,12 +24,18 @@ title: 标签分类
 ### CSS
 - [CSS Grid 布局](/posts/css-grid)
 
+### Python
+- [Python 学习路线指南](/posts/python-learning-path)
+
 ### 前端
 - [Vue 3 入门指南](/posts/vue3-intro)
 - [React 18 入门指南](/posts/react-intro)
 - [TypeScript 基础](/posts/typescript-basics)
 - [JavaScript 异步编程](/posts/js-async)
 - [CSS Grid 布局](/posts/css-grid)
+
+### 后端
+- [Python 学习路线指南](/posts/python-learning-path)
 
 ## 生活标签
 
@@ -48,5 +54,5 @@ title: 标签分类
 
 ## 按标签浏览
 
-- **技术**: [Vue](/tags/vue) | [React](/tags/react) | [TypeScript](/tags/typescript) | [JavaScript](/tags/javascript) | [CSS](/tags/css)
+- **技术**: [Vue](/tags/vue) | [React](/tags/react) | [TypeScript](/tags/typescript) | [JavaScript](/tags/javascript) | [CSS](/tags/css) | [Python](/tags/python) | [后端](/tags/backend)
 - **生活**: [思考](/tags/thinking) | [读书](/tags/reading) | [成长](/tags/growth) | [生活](/tags/life)

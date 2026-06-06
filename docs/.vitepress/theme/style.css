@@ -1,3 +1,18 @@
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html,
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .VPContent.is-home,
 .VPContent.is-home > div,
 .VPContent.is-home .container,
@@ -39,6 +54,25 @@
   --vp-shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --vp-c-brand: #60a5fa;
+    --vp-c-brand-light: #93c5fd;
+    --vp-c-brand-dark: #3b82f6;
+    
+    --vp-c-bg: #0f172a;
+    --vp-c-bg-alt: #1e293b;
+    --vp-c-bg-secondary: #334155;
+    
+    --vp-c-text-primary: #f1f5f9;
+    --vp-c-text-secondary: #cbd5e1;
+    --vp-c-text-muted: #94a3b8;
+    
+    --vp-c-border: #334155;
+    --vp-c-border-light: #1e293b;
+  }
+}
+
 :root.dark {
   --vp-c-brand: #60a5fa;
   --vp-c-brand-light: #93c5fd;
@@ -54,6 +88,24 @@
   
   --vp-c-border: #334155;
   --vp-c-border-light: #1e293b;
+}
+
+:root.light {
+  --vp-c-brand: #3b82f6;
+  --vp-c-brand-light: #60a5fa;
+  --vp-c-brand-dark: #2563eb;
+  --vp-c-brand-dimm: rgba(59, 130, 246, 0.1);
+  
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f8fafc;
+  --vp-c-bg-secondary: #f1f5f9;
+  
+  --vp-c-text-primary: #1e293b;
+  --vp-c-text-secondary: #64748b;
+  --vp-c-text-muted: #94a3b8;
+  
+  --vp-c-border: #e2e8f0;
+  --vp-c-border-light: #f1f5f9;
 }
 
 .vp-doc h1 {
@@ -132,4 +184,48 @@
   border: none;
   border-top: 1px solid var(--vp-c-border);
   margin: 2rem 0;
+}
+
+/* 外部链接安全属性 */
+.vp-doc a[target="_blank"] {
+  rel: "noopener noreferrer";
+}
+
+/* 暗色模式过渡效果优化 */
+.vp-doc,
+.VPContent,
+.VPSidebar,
+.VPNavBar,
+.VPFooter {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 图片懒加载 */
+img {
+  loading: lazy;
+}
+
+/* 触控目标大小优化 */
+button,
+a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* 代码块优化 */
+div[class*="language-"] {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* 移动端字体优化 */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .vp-doc {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
 }

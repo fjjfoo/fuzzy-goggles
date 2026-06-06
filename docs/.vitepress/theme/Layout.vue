@@ -1,11 +1,145 @@
 <script setup>
+import { ref, onMounted, onUnmounted, onErrorCaptured } from 'vue'
 import Theme from 'vitepress/theme'
 import { useData } from 'vitepress'
+import ReadingProgress from './components/ReadingProgress.vue'
+import CodeCopyButton from './components/CodeCopyButton.vue'
+import ShareButtons from './components/ShareButtons.vue'
 
 const { page } = useData()
+
+const currentTheme = ref('system')
+const showThemeMenu = ref(false)
+const isLoading = ref(true)
+const hasError = ref(false)
+const errorMessage = ref('')
+
+const themes = [
+  { id: 'light', name: '☀️ 亮色' },
+  { id: 'dark', name: '🌙 暗色' },
+  { id: 'system', name: '🖥️ 跟随系统' }
+]
+
+const getThemeIcon = () => {
+  const icons = { light: '☀️', dark: '🌙', system: '🖥️' }
+  return icons[currentTheme.value] || '🖥️'
+}
+
+const applyTheme = (theme) => {
+  currentTheme.value = theme
+  showThemeMenu.value = false
+  localStorage.setItem('vitepress-theme', theme)
+  
+  const html = document.documentElement
+  html.classList.remove('light', 'dark')
+  
+  if (theme === 'dark') {
+    html.classList.add('dark')
+  } else if (theme === 'light') {
+    html.classList.add('light')
+  }
+}
+
+const handleStart = () => {
+  isLoading.value = true
+}
+
+const handleEnd = () => {
+  isLoading.value = false
+}
+
+const resetError = () => {
+  hasError.value = false
+  errorMessage.value = ''
+}
+
+onErrorCaptured((err) => {
+  hasError.value = true
+  errorMessage.value = err.message
+  console.error('Component error:', err)
+  return false
+})
+
+onMounted(() => {
+  const saved = localStorage.getItem('vitepress-theme') || 'system'
+  applyTheme(saved)
+  
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (currentTheme.value === 'system') {
+      const html = document.documentElement
+      if (e.matches) {
+        html.classList.add('dark')
+        html.classList.remove('light')
+      } else {
+        html.classList.remove('dark')
+        html.classList.add('light')
+      }
+    }
+  })
+  
+  window.addEventListener('vitepress:start', handleStart)
+  window.addEventListener('vitepress:end', handleEnd)
+  
+  setTimeout(() => {
+    isLoading.value = false
+  }, 1500)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('vitepress:start', handleStart)
+  window.removeEventListener('vitepress:end', handleEnd)
+})
 </script>
 
 <template>
+  <ReadingProgress />
+  <CodeCopyButton />
+  <ShareButtons />
+  
+  <!-- 页面加载状态 -->
+  <transition name="fade">
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p class="loading-text">加载中...</p>
+      </div>
+    </div>
+  </transition>
+  
+  <!-- 错误处理 -->
+  <transition name="fade">
+    <div v-if="hasError" class="error-overlay">
+      <div class="error-content">
+        <h2 class="error-title">页面加载出错</h2>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button class="error-retry" @click="resetError">重试</button>
+      </div>
+    </div>
+  </transition>
+  
+  <div class="theme-switch-container">
+    <button 
+      class="theme-switch-btn"
+      @click="showThemeMenu = !showThemeMenu"
+      :title="themes.find(t => t.id === currentTheme)?.name"
+    >
+      <span>{{ getThemeIcon() }}</span>
+    </button>
+    <transition name="fade">
+      <div v-if="showThemeMenu" class="theme-menu" @click.self="showThemeMenu = false">
+        <button 
+          v-for="theme in themes" 
+          :key="theme.id"
+          class="theme-menu-item"
+          :class="{ active: currentTheme === theme.id }"
+          @click="applyTheme(theme.id)"
+        >
+          {{ theme.name }}
+        </button>
+      </div>
+    </transition>
+  </div>
+  
   <Theme.Layout>
     <template #home-hero-text>
       <div v-if="page.path === '/'" class="custom-home">
@@ -86,6 +220,27 @@ const { page } = useData()
               </div>
               <span class="post-date">2024-01-05</span>
             </a>
+            <a href="/posts/life-thinking" class="post-item">
+              <div class="post-info">
+                <span class="post-category">生活</span>
+                <h3 class="post-title">生活中的技术思维</h3>
+              </div>
+              <span class="post-date">2024-02-15</span>
+            </a>
+            <a href="/posts/reading-habits" class="post-item">
+              <div class="post-info">
+                <span class="post-category">读书</span>
+                <h3 class="post-title">我的阅读习惯养成记</h3>
+              </div>
+              <span class="post-date">2024-02-20</span>
+            </a>
+            <a href="/posts/book-summary" class="post-item">
+              <div class="post-info">
+                <span class="post-category">读书</span>
+                <h3 class="post-title">《代码大全》读书笔记</h3>
+              </div>
+              <span class="post-date">2024-03-10</span>
+            </a>
           </div>
         </div>
 
@@ -109,6 +264,17 @@ const { page } = useData()
 
         <footer class="home-footer">
           <p>© 2024 feisun林的博客 · 用 ❤️ 和 ☕ 打造</p>
+          <div class="stats-footer">
+            <span class="stats-item">
+              <span class="stats-icon">👁️</span>
+              <span class="stats-text">总访问量: <span id="busuanzi_value_site_pv">---</span></span>
+            </span>
+            <span class="stats-divider">|</span>
+            <span class="stats-item">
+              <span class="stats-icon">👥</span>
+              <span class="stats-text">访客数: <span id="busuanzi_value_site_uv">---</span></span>
+            </span>
+          </div>
         </footer>
       </div>
     </template>
@@ -394,6 +560,100 @@ const { page } = useData()
   font-size: 0.875rem;
 }
 
+.stats-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.stats-icon {
+  font-size: 0.875rem;
+}
+
+.stats-divider {
+  opacity: 0.4;
+}
+
+.theme-switch-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+.theme-switch-btn {
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-switch-btn:hover {
+  background-color: var(--vp-c-brand);
+  border-color: var(--vp-c-brand);
+  transform: scale(1.05);
+}
+
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  min-width: 140px;
+  box-shadow: var(--vp-shadow-3);
+}
+
+.theme-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--vp-c-text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.theme-menu-item:hover {
+  background-color: var(--vp-c-bg-alt);
+}
+
+.theme-menu-item.active {
+  background-color: var(--vp-c-brand-dimm);
+  color: var(--vp-c-brand);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 @media (max-width: 640px) {
   .hero-name {
     font-size: 2rem;
@@ -428,5 +688,105 @@ const { page } = useData()
     flex-direction: column;
     align-items: center;
   }
+}
+
+/* 加载状态样式 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--vp-c-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--vp-c-border);
+  border-top-color: var(--vp-c-brand);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: var(--vp-c-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* 错误处理样式 */
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--vp-c-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.error-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 400px;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: var(--vp-c-text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.error-retry {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--vp-c-brand);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.error-retry:hover {
+  background-color: var(--vp-c-brand-dark);
+}
+
+/* 过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
